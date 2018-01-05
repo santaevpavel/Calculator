@@ -13,4 +13,11 @@ class ExpressionTest {
         exp.addMember(5.toNumber())
         Assert.assertEquals(exp.calculate().value, 5.0, delta)
     }
+
+    @Test
+    fun testSingleDoubleNumber() {
+        val exp = Expression()
+        exp.addMember(5.123.toNumber())
+        Assert.assertEquals(exp.calculate().value, 5.123, delta)
+    }
 }
