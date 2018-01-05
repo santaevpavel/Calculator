@@ -2,6 +2,7 @@ package com.santaev.core.usecase
 
 import com.santaev.core.entity.Expression
 import com.santaev.core.entity.member.Number
+import com.santaev.core.entity.member.Operator
 import com.santaev.core.usecase.dto.OperationDto
 import com.santaev.core.usecase.dto.ResultDto
 import com.santaev.core.usecase.dto.ResultTypeDto
@@ -9,6 +10,7 @@ import com.santaev.core.util.LoggerProxy
 import com.santaev.core.util.toNumber
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import java.util.*
 
 class CalculateUseCase(
         private val output: ICalculateUseCase.Output
@@ -35,24 +37,64 @@ class CalculateUseCase(
             it.mul(10.toNumber()).add(number.toNumber())
                     .also { expression.replaceLast(it) }
         } ?: number.toNumber().also { expression.addMember(it) }
+
+        updateResult()
+        updateExpression()
     }
 
     override fun addOperation(operation: OperationDto) {
-        when (operation) {
-            OperationDto.PLUS -> {
+        try {
+            when (operation) {
+                OperationDto.PLUS -> {
+                    typingNumber = null
+                    expression.addMember(Operator.PLUS)
+                }
+                OperationDto.MINUS -> {
+                    typingNumber = null
+                    expression.addMember(Operator.MINUS)
+                }
+                OperationDto.CLEAR -> {
+                    expression = Expression()
+                    typingNumber = null
+                }
+                OperationDto.CLEAR_LAST -> {
+                    expression.removeLast()
+                    typingNumber = null
+                }
+                else -> {
+                    LoggerProxy.log(TAG, "Unknown operation: " + operation)
+                    output.onError("Unsupported operation")
+                }
             }
-            OperationDto.MINUS -> {
+            updateResult()
+
+        } catch (e: Exception) {
+            resultSubject.onNext(ResultDto(ResultTypeDto.ERROR, "Error"))
+        }
+        updateExpression()
+
+    }
+
+    private fun updateExpression() {
+        val res = StringBuilder()
+        expression.getMembers().forEach({ m ->
+            if (m is Number) {
+                res.append(String.format(Locale.ENGLISH, "%.0f ", m.value))
             }
-            OperationDto.MULTIPLE -> {
+            if (m is Operator) {
+                res.append(m.toString() + " ")
             }
-            OperationDto.DIVISION -> {
-            }
-            OperationDto.EQUALS -> {
-            }
-            else -> {
-                LoggerProxy.log(TAG, "Unknown operation: " + operation)
-                output.onError("Unsupported operation")
-            }
+        })
+        expressionSubject.onNext(res.toString())
+    }
+
+    private fun updateResult() {
+        try {
+            val result = expression.calculate()
+            resultSubject.onNext(ResultDto(ResultTypeDto.SUCCESS, result.value.toString()
+            ))
+        } catch (e: Exception) {
+            resultSubject.onNext(ResultDto(ResultTypeDto.ERROR, "Error"))
         }
     }
 

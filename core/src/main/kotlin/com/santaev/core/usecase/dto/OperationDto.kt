@@ -5,5 +5,7 @@ enum class OperationDto {
     PLUS,
     MINUS,
     MULTIPLE,
+    CLEAR,
+    CLEAR_LAST,
     DIVISION;
 }
