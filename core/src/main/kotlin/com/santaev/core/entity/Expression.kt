@@ -47,12 +47,12 @@ class Expression {
                 val number = first as Number
                 val operator = members[1] as? Operator
                         ?: throw IllegalStateException("Member after number should be operator")
-                operator.perform(number, evaluate(members.subList(2, members.size - 1)))
+                operator.perform(number, evaluate(members.subList(2, members.size)))
             }
             Operator::class -> {
                 val operator = first as Operator
                 if (operator == Operator.PLUS || operator == Operator.MINUS) {
-                    val number = evaluate(members.subList(1, members.size - 1))
+                    val number = evaluate(members.subList(1, members.size))
                     operator.perform(Number(0.0), number)
                 } else {
                     throw IllegalStateException("Incorrect prefix operator: " + operator)

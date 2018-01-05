@@ -13,12 +13,12 @@ enum class Operator : IMember {
     },
     MULTIPLE {
         override fun perform(first: Number, second: Number): Number {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            return first.mul(second)
         }
     },
     DIVISION {
         override fun perform(first: Number, second: Number): Number {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            return first.div(second)
         }
     };
 

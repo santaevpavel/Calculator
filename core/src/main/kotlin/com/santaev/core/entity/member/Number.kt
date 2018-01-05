@@ -6,6 +6,10 @@ class Number(val value: Double) : IMember {
         return Number(value * other.value)
     }
 
+    fun div(other: Number): Number {
+        return Number(value / other.value)
+    }
+
     fun add(other: Number): Number {
         return Number(value + other.value)
     }
