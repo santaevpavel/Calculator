@@ -3,4 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="calc_button_text_def_color">#555</color>
+    <color name="calc_button_text_err_color">#ff6060</color>
 </resources>
