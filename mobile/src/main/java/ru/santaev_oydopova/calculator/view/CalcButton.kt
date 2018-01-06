@@ -41,6 +41,10 @@ class CalcButton : FrameLayout {
         binding.text.text = text
     }
 
+    fun setTextColor(color: Int) {
+        binding.text.setTextColor(color)
+    }
+
     private fun init() {
         binding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),

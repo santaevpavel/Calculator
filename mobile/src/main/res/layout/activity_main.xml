@@ -227,7 +227,9 @@
                 android:id="@+id/btn_equal"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                button_background="@{ @color/colorAccent }"
+                button_text_color="@{ @android:color/white }" />
 
         </LinearLayout>
 
