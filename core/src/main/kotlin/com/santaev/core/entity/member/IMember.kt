@@ -1,4 +1,4 @@
 package com.santaev.core.entity.member
 
-interface IMember
+internal interface IMember
 

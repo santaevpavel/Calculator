@@ -6,7 +6,7 @@ import com.santaev.core.entity.member.Number
 import com.santaev.core.entity.member.Operator
 import java.util.*
 
-class Expression {
+internal class Expression {
 
     private val members: MutableList<IMember> = ArrayList()
 

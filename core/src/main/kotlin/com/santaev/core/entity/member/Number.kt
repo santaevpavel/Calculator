@@ -1,6 +1,6 @@
 package com.santaev.core.entity.member
 
-class Number(val value: Double) : IMember {
+internal class Number(val value: Double) : IMember {
 
     fun mul(other: Number): Number {
         return Number(value * other.value)

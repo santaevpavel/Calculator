@@ -1,6 +1,6 @@
 package com.santaev.core.entity.member
 
-enum class Operator : IMember {
+internal enum class Operator : IMember {
     PLUS {
         override fun perform(first: Number, second: Number): Number {
             return Number(first.value + second.value)

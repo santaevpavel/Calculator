@@ -16,7 +16,7 @@ object LoggerProxy : ILogger {
         this.logger = logger
     }
 
-    class StdLogger : ILogger {
+    internal class StdLogger : ILogger {
 
         override fun log(tag: String, msg: String) {
             println("$tag: $msg")
