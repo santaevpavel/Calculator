@@ -25,7 +25,13 @@ android {
 
 }
 
-
+ext {
+    archLifecycleVersion = "1.0.0"
+    archRoomVersion = "1.0.0"
+    supportLibVersion = "26.1.0"
+    runnerVersion = "0.5"
+    rulesVersion = "0.5"
+}
 
 dependencies {
     implementation project(':core')
@@ -39,9 +45,19 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    compile 'android.arch.lifecycle:extensions:' + archLifecycleVersion
+    compile 'android.arch.persistence.room:runtime:' + archRoomVersion
+    compile 'android.arch.persistence.room:rxjava2:' + archRoomVersion
+    annotationProcessor "android.arch.lifecycle:compiler:" + archLifecycleVersion
+    annotationProcessor "android.arch.persistence.room:compiler:" + archRoomVersion
+    kapt "android.arch.lifecycle:compiler:" + archLifecycleVersion
+    kapt "android.arch.persistence.room:compiler:" + archRoomVersion
+
     //wearApp project(':wear')
     //implementation 'com.google.android.gms:play-services-wearable:+'
 }
+
 kapt {
     generateStubs = true
 }

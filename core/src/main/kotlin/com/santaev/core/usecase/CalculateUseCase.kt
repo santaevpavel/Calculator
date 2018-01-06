@@ -33,6 +33,9 @@ class CalculateUseCase(
     }
 
     override fun addNumber(number: Int) {
+        if (number !in 0..9) {
+            throw IllegalArgumentException("Number should be in 0..9")
+        }
         typingNumber = typingNumber?.let {
             it.mul(10.toNumber()).add(number.toNumber())
                     .also { expression.replaceLast(it) }

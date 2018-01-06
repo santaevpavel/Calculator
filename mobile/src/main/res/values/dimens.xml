@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
+    <dimen name="result_text_size">32sp</dimen>
+    <dimen name="expression_text_size">24sp</dimen>
+    <dimen name="btn_def_text_size">24sp</dimen>
 </resources>

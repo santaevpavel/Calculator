@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -13,17 +14,37 @@
             app:layout_constraintGuide_begin="150dp" />
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/result"
+            android:id="@+id/expression"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="8dp"
-            android:gravity="bottom|right"
-            android:textSize="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="bottom|end"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="100 + 23"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/expression_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/result"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/result"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="bottom|end"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/dark_gray"
             android:text="123"
+            android:textSize="@dimen/result_text_size"
             app:layout_constraintBottom_toBottomOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:ignore="HardcodedText" />
 
         <LinearLayout
             android:id="@+id/row_four"

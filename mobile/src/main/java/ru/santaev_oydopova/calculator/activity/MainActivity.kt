@@ -1,93 +1,75 @@
 package ru.santaev_oydopova.calculator.activity
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
-import com.santaev.core.usecase.CalculateUseCase
-import com.santaev.core.usecase.ICalculateUseCase
-import com.santaev.core.usecase.dto.OperationDto
-import com.santaev.core.usecase.dto.ResultDto
-import com.santaev.core.usecase.dto.ResultTypeDto
-import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
 import ru.santaev_oydopova.calculator.R
 import ru.santaev_oydopova.calculator.databinding.ActivityMainBinding
 import ru.santaev_oydopova.calculator.view.CalcButton
+import ru.santaev_oydopova.calculator.viewmodel.MainViewModel
 
-class MainActivity : AppCompatActivity(), ICalculateUseCase.Output {
+class MainActivity : AppCompatActivity() {
 
-    override fun onError(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
-
-    private val usecase: ICalculateUseCase.Input = CalculateUseCase(this)
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        initNumberButton(binding.btnZero, 0)
-        initNumberButton(binding.btnOne, 1)
-        initNumberButton(binding.btnTwo, 2)
-        initNumberButton(binding.btnThree, 3)
-        initNumberButton(binding.btnFour, 4)
-        initNumberButton(binding.btnFive, 5)
-        initNumberButton(binding.btnSix, 6)
-        initNumberButton(binding.btnSeven, 7)
-        initNumberButton(binding.btnEight, 8)
-        initNumberButton(binding.btnNine, 9)
-
-        binding.btnPlus.apply {
-            setText("+")
-            setOnClickListener({ usecase.addOperation(OperationDto.PLUS) })
+        binding.apply {
+            initNumberButtons(
+                    arrayOf(
+                            btnZero,
+                            btnOne,
+                            btnTwo,
+                            btnThree,
+                            btnFour,
+                            btnFive,
+                            btnSix,
+                            btnSeven,
+                            btnEight,
+                            btnNine
+                    ))
+            initOperationButtons(btnPlus, "+", MainViewModel.Operation.PLUS)
+            initOperationButtons(btnMinus, "-", MainViewModel.Operation.MINUS)
+            initOperationButtons(btnMul, "×", MainViewModel.Operation.MULTIPLY)
+            initOperationButtons(btnDiv, "÷", MainViewModel.Operation.DIVISION)
+            initOperationButtons(btnClear, "C", MainViewModel.Operation.CLEAR)
+            initOperationButtons(btnClearOne, "<<", MainViewModel.Operation.CLEAR_LAST)
         }
 
-        binding.btnMinus.apply {
-            setText("-")
-            setOnClickListener({ usecase.addOperation(OperationDto.MINUS) })
-        }
-
-        binding.btnMul.apply {
-            setText("**")
-            setOnClickListener({ usecase.addOperation(OperationDto.MULTIPLE) })
-        }
-
-        binding.btnDiv.apply {
-            setText("/")
-            setOnClickListener({ usecase.addOperation(OperationDto.DIVISION) })
-        }
-
-        binding.btnClear.apply {
-            setText("C")
-            setOnClickListener({ usecase.addOperation(OperationDto.CLEAR) })
-        }
-
-        binding.btnClearOne.apply {
-            setText("C")
-            setOnClickListener({ usecase.addOperation(OperationDto.CLEAR_LAST) })
-        }
-
-        Observable.combineLatest(
-                usecase.getResult(),
-                usecase.getExpression(),
-                BiFunction<ResultDto, String, Pair<ResultDto, String>> { t1, t2 -> Pair(t1, t2) }
-        ).subscribe({ result ->
-            if (result.first.type == ResultTypeDto.ERROR) {
-                binding.result.setTextColor(resources.getColor(R.color.calc_button_text_err_color))
-            } else {
-                binding.result.setTextColor(resources.getColor(R.color.calc_button_text_def_color))
-            }
-            binding.result.text = "${result.second}\n${result.first.value}"
-        })
+        observeViewModel()
     }
 
-    private fun initNumberButton(view: CalcButton, num: Int) {
+    private fun observeViewModel() {
+        viewModel.getResult()
+                .observe(this, Observer { res -> binding.result.text = "=${res ?: "0"}" })
+        viewModel.getExpression()
+                .observe(this, Observer { exp -> binding.expression.text = exp ?: "" })
+    }
+
+    private fun initNumberButtons(view: Array<CalcButton>) {
+        view.forEachIndexed { index, calcButton ->
+            calcButton.apply {
+                setText(index.toString())
+                setOnClickListener({ viewModel.onTypedNumber(index) })
+            }
+        }
+    }
+
+    private fun initOperationButtons(
+            view: CalcButton,
+            text: String,
+            operation: MainViewModel.Operation
+    ) {
         view.apply {
-            setText(num.toString())
-            setOnClickListener({ usecase.addNumber(num) })
+            setText(text)
+            setOnClickListener { viewModel.onTypedOperation(operation) }
         }
     }
 }
