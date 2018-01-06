@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             initOperationButtons(btnDiv, "÷", MainViewModel.Operation.DIVISION)
             initOperationButtons(btnClear, "C", MainViewModel.Operation.CLEAR)
             initOperationButtons(btnClearOne, "<<", MainViewModel.Operation.CLEAR_LAST)
+            initOperationButtons(btnEqual, "=", MainViewModel.Operation.EQUAL)
         }
 
         observeViewModel()

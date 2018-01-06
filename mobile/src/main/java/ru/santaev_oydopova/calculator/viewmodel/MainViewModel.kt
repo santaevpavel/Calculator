@@ -64,6 +64,7 @@ internal class MainViewModel : ViewModel(), ICalculateUseCase.Output {
             Operation.DIVISION -> useCase.addOperation(OperationDto.DIVISION)
             Operation.CLEAR -> useCase.addOperation(OperationDto.CLEAR)
             Operation.CLEAR_LAST -> useCase.addOperation(OperationDto.CLEAR_LAST)
+            Operation.EQUAL -> useCase.addOperation(OperationDto.EQUALS)
         }
     }
 
@@ -79,6 +80,7 @@ internal class MainViewModel : ViewModel(), ICalculateUseCase.Output {
         DIVISION,
         CLEAR,
         CLEAR_LAST,
+        EQUAL
     }
 
     companion object {

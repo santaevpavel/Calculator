@@ -45,6 +45,7 @@ class CalculateUseCase(
         updateExpression()
     }
 
+    @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override fun addOperation(operation: OperationDto) {
         try {
             when (operation) {
@@ -71,6 +72,12 @@ class CalculateUseCase(
                 OperationDto.CLEAR_LAST -> {
                     expression.removeLast()
                     typingNumber = null
+                }
+                OperationDto.EQUALS -> {
+                    typingNumber = null
+                    val res = expression.calculate()
+                    expression = Expression()
+                    expression.addMember(res)
                 }
                 else -> {
                     LoggerProxy.log(TAG, "Unknown operation: " + operation)
