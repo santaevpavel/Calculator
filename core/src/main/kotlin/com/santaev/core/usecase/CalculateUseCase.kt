@@ -47,11 +47,19 @@ class CalculateUseCase(
             when (operation) {
                 OperationDto.PLUS -> {
                     typingNumber = null
-                    expression.addMember(Operator.PLUS)
+                    addOrReplaceLastOperator(Operator.PLUS)
                 }
                 OperationDto.MINUS -> {
                     typingNumber = null
-                    expression.addMember(Operator.MINUS)
+                    addOrReplaceLastOperator(Operator.MINUS)
+                }
+                OperationDto.MULTIPLE -> {
+                    typingNumber = null
+                    addOrReplaceLastOperator(Operator.MULTIPLE)
+                }
+                OperationDto.DIVISION -> {
+                    typingNumber = null
+                    addOrReplaceLastOperator(Operator.DIVISION)
                 }
                 OperationDto.CLEAR -> {
                     expression = Expression()
@@ -73,6 +81,12 @@ class CalculateUseCase(
         }
         updateExpression()
 
+    }
+
+    private fun addOrReplaceLastOperator(operator: Operator) {
+        expression.getMembers().lastOrNull()?.let {
+            if (it is Operator) expression.replaceLast(operator) else expression.addMember(operator)
+        }
     }
 
     private fun updateExpression() {
