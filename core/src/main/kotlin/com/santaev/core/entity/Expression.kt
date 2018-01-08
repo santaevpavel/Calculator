@@ -4,11 +4,14 @@ import com.santaev.core.entity.member.Bracket
 import com.santaev.core.entity.member.IMember
 import com.santaev.core.entity.member.Number
 import com.santaev.core.entity.member.Operator
+import com.santaev.core.util.LoggerProxy
+import com.santaev.core.util.toNumber
 import java.util.*
 
 internal class Expression {
 
     private val members: MutableList<IMember> = ArrayList()
+    private val infixNotationConverter = InfixNotationConverter()
 
     fun addMember(member: IMember) {
         members.add(member)
@@ -30,38 +33,46 @@ internal class Expression {
     }
 
     fun calculate(): Number {
-        return evaluate(members)
+        LoggerProxy.log(TAG, "calculate")
+        return if (members.isEmpty()) {
+            0.toNumber()
+        } else {
+            val converted = infixNotationConverter.convert(members)
+            LoggerProxy.log(TAG, "infix notation = " + converted)
+            return evaluate(ArrayDeque(converted.reversed()))
+        }
     }
 
-    private fun evaluate(members: List<IMember>): Number {
+    private fun evaluate(members: Deque<IMember>): Number {
         if (members.isEmpty()) {
-            return Number(0.0)
+            throw IllegalStateException("Empty expression")
         }
         if (members.size == 1) {
-            return members[0] as? Number
+            return members.peek() as? Number
                     ?: throw IllegalStateException("One element array should contains number")
         }
-        val first = members[0]
-        return when (first::class) {
-            Number::class -> {
-                val number = first as Number
-                val operator = members[1] as? Operator
-                        ?: throw IllegalStateException("Member after number should be operator")
-                operator.perform(number, evaluate(members.subList(2, members.size)))
+        val first = members.pop()
+
+        return when (first) {
+            is Number -> {
+                first
             }
-            Operator::class -> {
-                val operator = first as Operator
-                if (operator == Operator.PLUS || operator == Operator.MINUS) {
-                    val number = evaluate(members.subList(1, members.size))
-                    operator.perform(Number(0.0), number)
-                } else {
-                    throw IllegalStateException("Incorrect prefix operator: " + operator)
-                }
+            is Operator -> {
+                val secondNumber = evaluate(members)
+                val firstNumber = evaluate(members)
+                first.perform(firstNumber, secondNumber)
             }
-            Bracket::class -> {
+            is Bracket -> {
                 throw RuntimeException("Not yet implemented")
             }
             else -> throw RuntimeException("Not yet implemented")
+        }.also {
+            LoggerProxy.log(TAG, "evaluate" + members.toString() + " = " + it)
         }
+    }
+
+    companion object {
+
+        private val TAG = "Core: Expression"
     }
 }

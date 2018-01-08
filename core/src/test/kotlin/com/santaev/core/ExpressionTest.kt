@@ -57,4 +57,40 @@ class ExpressionTest {
         exp.addMember(2.toNumber())
         Assert.assertEquals(1.1, exp.calculate().value, delta)
     }
+
+    @Test
+    fun testDivisionMinusExp() {
+        val exp = Expression()
+        exp.addMember(4.toNumber())
+        exp.addMember(Operator.DIVISION)
+        exp.addMember(2.toNumber())
+        exp.addMember(Operator.MINUS)
+        exp.addMember(2.toNumber())
+
+        Assert.assertEquals(0.0, exp.calculate().value, delta)
+    }
+
+    @Test
+    fun testMinusDivisionExp() {
+        val exp = Expression()
+        exp.addMember(6.toNumber())
+        exp.addMember(Operator.MINUS)
+        exp.addMember(4.toNumber())
+        exp.addMember(Operator.DIVISION)
+        exp.addMember(2.toNumber())
+
+        Assert.assertEquals(4.0, exp.calculate().value, delta)
+    }
+
+    @Test
+    fun testMinusMulExp() {
+        val exp = Expression()
+        exp.addMember(3.toNumber())
+        exp.addMember(Operator.MINUS)
+        exp.addMember(4.toNumber())
+        exp.addMember(Operator.MULTIPLE)
+        exp.addMember(2.toNumber())
+
+        Assert.assertEquals(-5.0, exp.calculate().value, delta)
+    }
 }

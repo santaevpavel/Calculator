@@ -1,22 +1,22 @@
 package com.santaev.core.entity.member
 
-internal enum class Operator : IMember {
-    PLUS {
+internal enum class Operator(val priority: Int) : IMember {
+    PLUS(1) {
         override fun perform(first: Number, second: Number): Number {
             return Number(first.value + second.value)
         }
     },
-    MINUS {
+    MINUS(1) {
         override fun perform(first: Number, second: Number): Number {
             return Number(first.value - second.value)
         }
     },
-    MULTIPLE {
+    MULTIPLE(0) {
         override fun perform(first: Number, second: Number): Number {
             return first.mul(second)
         }
     },
-    DIVISION {
+    DIVISION(0) {
         override fun perform(first: Number, second: Number): Number {
             return first.div(second)
         }

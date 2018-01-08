@@ -1,6 +1,6 @@
 package com.santaev.core.entity.member
 
-internal class Number(val value: Double) : IMember {
+internal data class Number(val value: Double) : IMember {
 
     fun mul(other: Number): Number {
         return Number(value * other.value)
@@ -14,8 +14,4 @@ internal class Number(val value: Double) : IMember {
         return Number(value + other.value)
     }
 
-    enum class Type {
-        FLOAT,
-        INTEGER
-    }
 }
